@@ -1,20 +1,17 @@
 const mongoose = require("mongoose");
-//import {url} from "./../configuration"
-
-export const connectToMongoDB = () => {
-  mongoose.connect("mongodb://127.0.0.1:27017/manasCodeShare", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
+export const connectToMongoDB = async () => {
+  try {
+    await mongoose.connect("mongodb://127.0.0.1:27017/manasCodeShare", {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log("Connected successfully to MongoDB");
+  } catch (error) {
+    console.error("Error connecting to MongoDB:", error);
+    throw error;
+  }
 };
 
-mongoose.connection.on("error", (err: any) => {
-  console.log("Mongoose connection error:", err);
-});
-
-mongoose.connection.on("disconnected", () => {
-  console.log("Mongoose disconnected");
-});
 // export async function closeConnection() {
 //   try {
 //     await mongoose.connection.close();
