@@ -1,26 +1,18 @@
-import { closeConnection, connectToMongoDB } from "./connections";
-import { insertCodeData } from "./schema";
+import { connectToMongoDB } from "./connections";
+import express from "express";
+import cors from "cors";
 
 console.log("manas");
-const url = "mongodb://127.0.0.1:27017/";
-const dbName = "manasCodeShareDatabaseName";
+connectToMongoDB();
+const app = express();
+const port = process.env.PORT || 40000;
 
-async function main() {
-  try {
-    const db = await connectToMongoDB(url, dbName);
+app.use(express.json());
+app.use(cors());
 
-    // Insert a book
-    const newBook = {
-      urlCode: "xcvb",
-      sharedData: "manas code share",
-    };
-    // await insertCodeData(db, newBook);
-
-    // await closeConnection();
-  } catch (error) {
-    console.error("An error occurred:", error);
-  }
-}
-
-// Execute main function
-main();
+app.get("/", (req, res) => {
+  res.send("Welcome to code share by manas backend.");
+});
+app.listen(port, () => {
+  console.log(`Server started at http://localhost:${port}`);
+});
