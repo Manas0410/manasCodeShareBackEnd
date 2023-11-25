@@ -5,6 +5,7 @@ import mongoose, { Schema, Document } from "mongoose";
 export interface CodeData {
   urlCode: string;
   sharedData: string;
+  languageName: string;
 }
 
 export interface CodeDataDocument extends CodeData, Document {}
@@ -12,6 +13,7 @@ export interface CodeDataDocument extends CodeData, Document {}
 const codeDataSchema: Schema = new mongoose.Schema({
   urlCode: String,
   sharedData: String,
+  languageName: String,
 });
 
 export const CodeDataModel = mongoose.model<CodeDataDocument>(
