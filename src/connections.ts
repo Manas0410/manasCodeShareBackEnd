@@ -1,13 +1,14 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
+
 export const connectToMongoDB = async () => {
+  const connectionString =
+    "mongodb+srv://manasshrivastava0410:1HXEVp068zxB4iEG@cluster0.fcgbcxd.mongodb.net/?retryWrites=true&w=majority";
+
   try {
-    await mongoose.connect("mongodb://127.0.0.1:27017/manasCodeShare", {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-    console.log("Connected successfully to MongoDB");
+    await mongoose.connect(connectionString);
+    console.log("Connected successfully to MongoDB Atlas");
   } catch (error) {
-    console.error("Error connecting to MongoDB:", error);
+    console.error("Error connecting to MongoDB Atlas:", error);
     throw error;
   }
 };
