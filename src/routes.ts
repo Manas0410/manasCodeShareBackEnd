@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.post("/post", async (req: Request, res: Response) => {
   try {
-    const { urlCode, sharedData, languageName }: CodeData = req.body;
+    const { urlCode, sharedData, languageName,isEditable,userId }: CodeData = req.body;
 
     if (!urlCode || !sharedData || !languageName) {
       return res
@@ -19,6 +19,8 @@ router.post("/post", async (req: Request, res: Response) => {
       urlCode,
       sharedData,
       languageName,
+      isEditable,
+      userId
     });
     await newCodeData.save();
 
@@ -56,7 +58,7 @@ router.get("/get", async (req: Request, res: Response) => {
 
 router.put("/update", async (req: Request, res: Response) => {
   try {
-    const { urlCode, sharedData, languageName }: CodeData = req.body;
+    const { urlCode, sharedData, languageName,isEditable }: CodeData = req.body;
 
     if (!urlCode || !sharedData || !languageName) {
       return res
@@ -66,7 +68,7 @@ router.put("/update", async (req: Request, res: Response) => {
 
     const updatedCodeData = await CodeDataModel.findOneAndUpdate(
       { urlCode },
-      { sharedData, languageName },
+      { sharedData, languageName,isEditable },
       { new: true }
     );
 
@@ -84,3 +86,6 @@ router.put("/update", async (req: Request, res: Response) => {
 });
 
 export default router;
+// https://manascodeshare.onrender.com/code/post
+// https://manascodeshare.onrender.com/code/get?urlCode=manas1
+// https://manascodeshare.onrender.com/code/update
