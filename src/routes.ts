@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.post("/post", async (req: Request, res: Response) => {
   try {
-    const { urlCode, sharedData, languageName,isEditable,userId }: CodeData = req.body;
+    const { urlCode, sharedData, languageName, isEditable, userId }: CodeData = req.body;
 
     if (!urlCode || !sharedData || !languageName) {
       return res
@@ -20,8 +20,10 @@ router.post("/post", async (req: Request, res: Response) => {
       sharedData,
       languageName,
       isEditable,
-      userId
+      userId,
+      createdAt: new Date() // Set createdAt field to current date and time
     });
+
     await newCodeData.save();
 
     return res.status(201).json(newCodeData);
@@ -30,6 +32,7 @@ router.post("/post", async (req: Request, res: Response) => {
     return res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
 
 router.get("/get", async (req: Request, res: Response) => {
   try {
