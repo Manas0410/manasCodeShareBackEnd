@@ -40,7 +40,7 @@
 import express from "express";
 import cors from "cors";
 import http from "http";
-import { Server } from "socket.io";
+import { Server, Socket } from "socket.io";
 import { connectToMongoDB } from "./connections";
 import codeDataRoutes from "./routes";
 import cron from "node-cron";
@@ -74,11 +74,11 @@ async function startServer() {
     cron.schedule("0 2 * * *", deleteOldDocuments);
 
     // Socket.IO connection handling
-    io.on("connection", (socket) => {
+    io.on("connection", (socket: Socket) => {
       console.log("A user connected");
 
       // Handle incoming messages from clients
-      socket.on("message", (message) => {
+      socket.on("message", (message: string) => {
         console.log("Received message:", message);
 
         // Broadcast the message to all connected clients except the sender
