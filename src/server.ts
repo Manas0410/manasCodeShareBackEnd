@@ -52,7 +52,13 @@ async function startServer() {
 
     const app = express();
     const server = http.createServer(app);
-    const io = new Server(server);
+    // const io = new Server(server);
+    const io = new Server(server, {
+      cors: {
+        origin: "*",
+        credentials: true,
+      },
+    });
 
     // Middleware
     app.use(express.json());
