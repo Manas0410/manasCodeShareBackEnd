@@ -53,6 +53,7 @@ async function startServer() {
     const app = express();
     const server = http.createServer(app);
     // const io = new Server(server);
+    // implement cors
     const io = new Server(server, {
       cors: {
         origin: "*",
