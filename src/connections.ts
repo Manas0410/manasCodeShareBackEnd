@@ -1,8 +1,13 @@
 import mongoose from "mongoose";
+import "dotenv/config";
 
 export const connectToMongoDB = async () => {
-  const connectionString =
-    "mongodb+srv://manasshrivastava0410:1HXEVp068zxB4iEG@cluster0.fcgbcxd.mongodb.net/?retryWrites=true&w=majority";
+  const { MONGO_CONNECTION_STRING } = process.env;
+  const connectionString = MONGO_CONNECTION_STRING;
+
+  if (!connectionString) {
+    throw new Error("MongoDB connection string is not defined");
+  }
 
   try {
     await mongoose.connect(connectionString);
