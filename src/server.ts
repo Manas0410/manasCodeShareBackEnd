@@ -22,11 +22,17 @@ async function startServer() {
         credentials: true,
       },
     });
+
     io.on("connection", (socket) => {
       console.log(`a user connected ${socket.id}`);
 
       socket.on("send_message", (data) => {
-        socket.broadcast.emit("receive_message", data);
+        for (let [id, socketInstance] of io.sockets.sockets) {
+          if (id !== socket.id) {
+            socketInstance.emit("receive_message", data);
+          }
+        }
+        // socket.broadcast.emit("receive_message", data); //
       });
     });
 
