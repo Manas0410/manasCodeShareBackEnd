@@ -64,16 +64,27 @@ router.put("/update", async (req: Request, res: Response) => {
     const { urlCode, sharedData, languageName, isEditable }: CodeData =
       req.body;
 
-    if (!urlCode || !sharedData || !languageName) {
+    if (!urlCode) {
+      return res.status(400).json({ error: "urlCode is a mandatory field" });
+    }
+
+    // Create an update object dynamically
+    const updateFields: Partial<CodeData> = {};
+    if (sharedData !== undefined) updateFields.sharedData = sharedData;
+    if (languageName !== undefined) updateFields.languageName = languageName;
+    if (isEditable !== undefined) updateFields.isEditable = isEditable;
+
+    // Check if there are any fields to update
+    if (Object.keys(updateFields).length === 0) {
       return res
         .status(400)
-        .json({ error: "urlCode, sharedData, and languageName are required." });
+        .json({ error: "No valid fields provided for update" });
     }
 
     const updatedCodeData = await CodeDataModel.findOneAndUpdate(
       { urlCode },
-      { sharedData, languageName, isEditable },
-      { new: true }
+      { $set: updateFields },
+      { new: true } // for returning the value after update
     );
 
     if (!updatedCodeData) {
