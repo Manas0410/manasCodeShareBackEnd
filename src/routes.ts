@@ -7,10 +7,9 @@ const router = express.Router();
 
 router.post("/post", async (req: Request, res: Response) => {
   try {
-    const { urlCode, sharedData, languageName, isEditable, userId }: CodeData =
-      req.body;
+    const { urlCode, sharedData, userId }: CodeData = req.body;
 
-    if (!urlCode || !sharedData || !languageName) {
+    if (!urlCode || !sharedData) {
       return res
         .status(400)
         .json({ error: "urlCode, sharedData, and languageName are required." });
@@ -19,8 +18,6 @@ router.post("/post", async (req: Request, res: Response) => {
     const newCodeData = new CodeDataModel({
       urlCode,
       sharedData,
-      languageName,
-      isEditable,
       userId,
       createdAt: new Date(), // Set createdAt field to current date and time
     });
@@ -34,9 +31,9 @@ router.post("/post", async (req: Request, res: Response) => {
   }
 });
 
-router.get("/get", async (req: Request, res: Response) => {
+router.get("/get/:urlCode", async (req: Request, res: Response) => {
   try {
-    const { urlCode } = req.query;
+    const { urlCode } = req.params;
 
     if (!urlCode) {
       return res
@@ -61,30 +58,29 @@ router.get("/get", async (req: Request, res: Response) => {
 
 router.put("/update", async (req: Request, res: Response) => {
   try {
-    const { urlCode, sharedData, languageName, isEditable }: CodeData =
-      req.body;
+    const { urlCode, fileData } = req.body;
 
-    if (!urlCode) {
-      return res.status(400).json({ error: "urlCode is a mandatory field" });
+    if (!urlCode || !fileData || !fileData.name) {
+      return res.status(400).json({
+        error: "urlCode and fileData with a name are mandatory fields",
+      });
     }
+    const existingCodeData = await CodeDataModel.findOne({ urlCode });
+    const existingFileData = existingCodeData?.sharedData[fileData.name];
 
-    // Create an update object dynamically
-    const updateFields: Partial<CodeData> = {};
-    if (sharedData !== undefined) updateFields.sharedData = sharedData;
-    if (languageName !== undefined) updateFields.languageName = languageName;
-    if (isEditable !== undefined) updateFields.isEditable = isEditable;
-
-    // Check if there are any fields to update
-    if (Object.keys(updateFields).length === 0) {
-      return res
-        .status(400)
-        .json({ error: "No valid fields provided for update" });
-    }
+    const updateFields = {
+      [`sharedData.${fileData.name}`]: {
+        name: fileData.name,
+        languageName: fileData.languageName || existingFileData?.languageName,
+        isEditable: fileData.isEditable || existingFileData?.isEditable,
+        data: fileData.data || existingFileData?.data,
+      },
+    };
 
     const updatedCodeData = await CodeDataModel.findOneAndUpdate(
       { urlCode },
       { $set: updateFields },
-      { new: true } // for returning the value after update
+      { new: true, upsert: true } // upsert creates if it doesn't exist
     );
 
     if (!updatedCodeData) {
