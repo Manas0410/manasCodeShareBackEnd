@@ -1,7 +1,7 @@
 // routes.ts
 
 import express, { Request, Response } from "express";
-import { CodeDataModel, CodeData } from "./schema";
+import { CodeDataModel, CodeData, FileData } from "./schema";
 
 const router = express.Router();
 
@@ -65,15 +65,19 @@ router.put("/update", async (req: Request, res: Response) => {
         error: "urlCode and fileData with a name are mandatory fields",
       });
     }
-    const existingCodeData = await CodeDataModel.findOne({ urlCode });
-    const existingFileData = existingCodeData?.sharedData[fileData.name];
+    const existingCodeData: CodeData | null = await CodeDataModel.findOne({
+      urlCode,
+    });
+    const existingFileData: FileData | undefined =
+      existingCodeData?.sharedData.get(fileData.name);
 
     const updateFields = {
       [`sharedData.${fileData.name}`]: {
         name: fileData.name,
         languageName: fileData.languageName || existingFileData?.languageName,
         isEditable: fileData.isEditable || existingFileData?.isEditable,
-        data: fileData.data || existingFileData?.data,
+        data:
+          fileData.data === "" ? "" : fileData.data || existingFileData?.data,
       },
     };
 

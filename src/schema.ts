@@ -1,7 +1,7 @@
 // schema.ts
 import mongoose, { Schema, Document } from "mongoose";
 
-interface FileData {
+export interface FileData {
   name: string;
   languageName: string;
   isEditable: boolean;
@@ -10,7 +10,7 @@ interface FileData {
 
 export interface CodeData {
   urlCode: string;
-  sharedData: Record<string, FileData>;
+  sharedData: Map<string, FileData>;
   userId: string;
   createdAt: Date;
 }
