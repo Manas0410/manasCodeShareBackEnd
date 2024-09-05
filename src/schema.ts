@@ -40,22 +40,22 @@ export const CodeDataModel = mongoose.model<CodeDataDocument>(
 // Manas4@sr
 
 const FormatOfSharedData = {
-  urlCode: "",
+  urlCode: "test",
   sharedData: {
     filename1: {
-      name: "",
+      name: "filename1",
       languageName: "",
       isEditable: "",
       data: "",
     },
     filename2: {
-      name: "",
+      name: "filename2",
       languageName: "",
       isEditable: "",
       data: "",
     },
   },
-  userId: "",
+  userId: "manas0410",
   createdAt: { type: Date, default: Date.now },
 };
 

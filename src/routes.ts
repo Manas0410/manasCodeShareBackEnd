@@ -100,7 +100,15 @@ router.put("/update", async (req: Request, res: Response) => {
   }
 });
 
+// payload for updation and creating new file
+// {
+//     "urlCode":"test",
+//     "fileData":{
+//       "name": "filename3",
+//       "languageName": "f3data",
+//       "isEditable": false,
+//       "data": ""
+//     }
+// }
+
 export default router;
-// https://manascodeshare.onrender.com/code/post
-// https://manascodeshare.onrender.com/code/get?urlCode=manas1
-// https://manascodeshare.onrender.com/code/update
