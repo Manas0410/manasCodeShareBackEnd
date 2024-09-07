@@ -100,6 +100,42 @@ router.put("/update", async (req: Request, res: Response) => {
   }
 });
 
+router.delete("/deleteFile", async (req: Request, res: Response) => {
+  const { fileName, urlCode } = req.body;
+
+  if (!fileName || !urlCode) {
+    return res
+      .status(400)
+      .json({ error: "fileName and urlCode are required fields" });
+  }
+
+  try {
+    const document = await CodeDataModel.findOne({ urlCode });
+
+    if (!document) {
+      return res.status(404).json({ error: "Document not found" });
+    }
+
+    // If sharedData is a Map, use .get() to check if the file exists
+    const fileData = document.sharedData.get(fileName);
+
+    if (!fileData) {
+      return res.status(404).json({ error: "File not found" });
+    }
+
+    // Use .delete() method to remove the file from the Map
+    document.sharedData.delete(fileName);
+
+    // Save the updated document
+    await document.save();
+
+    res.status(200).json({ message: "File deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting file:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 // payload for updation and creating new file
 // {
 //     "urlCode":"test",
