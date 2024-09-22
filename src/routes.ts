@@ -75,7 +75,10 @@ router.put("/update", async (req: Request, res: Response) => {
       [`sharedData.${fileData.name}`]: {
         name: fileData.name,
         languageName: fileData.languageName || existingFileData?.languageName,
-        isEditable: fileData.isEditable || existingFileData?.isEditable,
+        isEditable:
+          typeof fileData.isEditable === "boolean"
+            ? fileData.isEditable
+            : existingFileData?.isEditable,
         data:
           fileData.data === "" ? "" : fileData.data || existingFileData?.data,
       },
